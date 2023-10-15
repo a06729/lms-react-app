@@ -8,13 +8,33 @@ import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
+import 'dotenv/config'
 
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  publishers:[
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'a06729',
+          name: 'lms-react-app'
+        },
+        prerelease: false,
+        draft: false,
+        authToken:process.env.token
+      }
+    }
+  ],
+  makers: [
+    new MakerSquirrel({}), 
+    new MakerZIP({}, ['darwin']), 
+    new MakerRpm({}), 
+    new MakerDeb({})
+  ],
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
